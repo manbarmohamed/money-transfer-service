@@ -2,6 +2,7 @@ package com.bank.moneytransferservice.service.impl;
 
 import com.bank.moneytransferservice.dto.UserRequest;
 import com.bank.moneytransferservice.dto.UserResponse;
+import com.bank.moneytransferservice.exceptions.ResourceNotFoundException;
 import com.bank.moneytransferservice.mapper.UserMapper;
 import com.bank.moneytransferservice.repository.UserRepository;
 import com.bank.moneytransferservice.service.UserService;
@@ -39,12 +40,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getUserById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            return userMapper.toResponse(user);
-        }
-
-        return null;
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("User not found with id: " + id));
+        return userMapper.toResponse(user);
     }
 
     @Override

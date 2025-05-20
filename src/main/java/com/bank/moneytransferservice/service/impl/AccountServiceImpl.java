@@ -4,6 +4,7 @@ import com.bank.moneytransferservice.dto.AccountRequest;
 import com.bank.moneytransferservice.dto.AccountResponse;
 import com.bank.moneytransferservice.entity.Account;
 import com.bank.moneytransferservice.entity.User;
+import com.bank.moneytransferservice.exceptions.ResourceNotFoundException;
 import com.bank.moneytransferservice.mapper.AccountMapper;
 import com.bank.moneytransferservice.repository.AccountRepository;
 import com.bank.moneytransferservice.repository.UserRepository;
@@ -26,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountResponse createAccount(AccountRequest request) {
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (accountRepository.existsByOwnerId(user.getId())) {
             throw new RuntimeException("User already has an account");
@@ -43,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountResponse updateAccount(Long id, AccountRequest request) {
         Account account = accountRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
         if (request.getBalance() != null) {
             account.setBalance(request.getBalance());
         }
