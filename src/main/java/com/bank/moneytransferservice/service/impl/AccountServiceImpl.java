@@ -34,7 +34,7 @@ public class AccountServiceImpl implements AccountService {
         String accountNumber = generateUniqueAccountNumber();
         Account account = new Account();
         account.setAccountNumber(accountNumber);
-        account.setBalance(request.getBalance());
+        account.setBalance(0.0);
         account.setOwner(user);
         account = accountRepository.save(account);
         return accountMapper.toResponse(account);
@@ -42,7 +42,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountResponse updateAccount(Long id, AccountRequest request) {
-        return null;
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        if (request.getBalance() != null) {
+            account.setBalance(request.getBalance());
+        }
+        account = accountRepository.save(account);
+        return accountMapper.toResponse(account);
+
     }
 
     @Override
@@ -57,6 +64,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<AccountResponse> getAllAccounts() {
+        List<Account> accounts = accountRepository.findAll();
+        if (!accounts.isEmpty()) {
+            return accounts.stream()
+                    .map(accountMapper::toResponse)
+                    .toList();
+        }
         return List.of();
     }
 
