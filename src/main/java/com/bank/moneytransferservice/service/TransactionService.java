@@ -4,5 +4,5 @@ import com.bank.moneytransferservice.dto.TransferRequestDto;
 import com.bank.moneytransferservice.dto.TransferResponseDto;
 
 public interface TransactionService {
-    TransferResponseDto transfer(TransferRequestDto requestDto);
+    TransferResponseDto executeTransfer(TransferRequestDto requestDto);
 }
