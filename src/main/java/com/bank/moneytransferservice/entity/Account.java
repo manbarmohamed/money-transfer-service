@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,4 +24,10 @@ public class Account {
 
     @ManyToOne
     private User owner;
+
+    @OneToMany(mappedBy = "sender")
+    private List<Transaction> outgoingTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver")
+    private List<Transaction> incomingTransactions = new ArrayList<>();
 }
